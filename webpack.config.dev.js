@@ -19,4 +19,13 @@ module.exports = {
       filename: 'index.html',
     }),
   ],
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        loader: "babel-loader",
+        exclude: /(node_modules)/
+      }
+    ]
+  }
 };
