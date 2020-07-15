@@ -1,4 +1,5 @@
-import { moveToCenter, moveToPointer } from './helpers';
+import { keyboard, keyboardInit, moveSprite } from './keyboard';
+import { moveToCenter, moveToPointer, moveToPos } from './helpers';
 
 // And just for convenience let's register Loader plugin in order to use it right from Application instance like app.loader.add(..) etc.
 import { AppLoaderPlugin } from '@pixi/loaders';
@@ -22,16 +23,22 @@ Application.registerPlugin(AppLoaderPlugin);
 const app = new Application({
   width: window.innerWidth,
   height: window.innerHeight,
-  backgroundColor: 0xaaaaaa,
+  backgroundColor: 0x061639,
 });
+ 
+app.stage.interactive = true;
 document.body.appendChild(app.view);
-app.renderer.autoResize = true;
-app.renderer.backgroundColor = 0x061639;
+
+keyboard.init();
+
 const player = createPlayer();
 moveToCenter(player, app);
 
 app.stage.addChild(player);
-app.stage.interactive = true;
+
+
+app.ticker.add(() => moveSprite(player));
+
 
 app.stage.on('pointermove', (pointerMoveEvent) =>
   moveToPointer(player, pointerMoveEvent)
