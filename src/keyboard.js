@@ -10,6 +10,10 @@ export const keyboard = {
   onKeyRelease: function (key) {
     this.keysPressed[key] = false;
   },
+  moveSprite: function (sprite) {
+    const moves = moveStrategies.filter((s) => s.check() === true);
+    moves.map((move) => move.move(sprite));
+  },
 };
 
 const moveUpStrategy = {
@@ -34,8 +38,3 @@ const moveStrategies = [
   moveRightStrategy,
   moveLeftStrategy,
 ];
-
-export const moveSprite = (sprite) => {
-  const moves = moveStrategies.filter((s) => s.check() === true);
-  moves.map((move) => move.move(sprite));
-};
