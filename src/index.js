@@ -4,7 +4,7 @@ import {
   handleProgress,
   preloadResources,
 } from './loader';
-import { keyboard, keyboardInit, moveSprite } from './keyboard';
+import { keyboard, keyboardInit } from './keyboard';
 import { moveToCenter, moveToPointer, moveToPos } from './helpers';
 
 // And just for convenience let's register Loader plugin in order to use it right from Application instance like app.loader.add(..) etc.
@@ -17,6 +17,7 @@ import { InteractionManager } from '@pixi/interaction';
 import { Renderer } from '@pixi/core'; // Renderer is the class that is going to register plugins
 import { TickerPlugin } from '@pixi/ticker'; // TickerPlugin is the plugin for running an update loop (it's for the application class)
 import { assets } from './assets';
+import { bullets } from './bullets';
 import { createPlayerFrom } from './player';
 
 Renderer.registerPlugin('batch', BatchRenderer);
@@ -33,18 +34,21 @@ const app = new Application({
 });
 
 app.stage.interactive = true;
-document.body.appendChild(app.view);
+
+app.stage.width = window.innerWidth;
+app.stage.height = window.innerHeight;
+const appContainer = document.getElementById('gameContainer');
+appContainer.appendChild(app.view);
 
 // Preloader
 preloadResources(assets, app).load(() => {
   // On loaded items
-  const {resources} = app.loader;
+  const { resources } = app.loader;
   keyboard.init();
   const player = createPlayerFrom(resources.player.texture);
+  bullets.initOn(appContainer, app, player);
   moveToCenter(player, app);
   app.stage.addChild(player);
-  app.ticker.add(() => moveSprite(player));
-  app.stage.on('pointermove', (pointerMoveEvent) =>
-    moveToPointer(player, pointerMoveEvent)
-  );
+  app.ticker.add(() => keyboard.moveSprite(player));
+  app.ticker.add((delta) => bullets.updateBullets());
 });
