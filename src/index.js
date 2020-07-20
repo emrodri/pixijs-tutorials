@@ -1,3 +1,9 @@
+import { BaseTexture, BatchRenderer, Texture, resources } from '@pixi/core'; // BatchRenderer is the "plugin" for drawing sprites
+import {
+  createPlayerFrom,
+  createPlayerFromSheet,
+  createPlayerSheet,
+} from './player';
 import {
   handleDoneLoading,
   handleLoadingError,
@@ -11,14 +17,13 @@ import { moveToCenter, moveToPointer, moveToPos } from './helpers';
 import { AppLoaderPlugin } from '@pixi/loaders';
 // Import Application class that is the main part of our PIXI project
 import { Application } from '@pixi/app';
-import { BatchRenderer } from '@pixi/core'; // BatchRenderer is the "plugin" for drawing sprites
 import { InteractionManager } from '@pixi/interaction';
+import { Rectangle } from '@pixi/math';
 // In order that PIXI could render things we need to register appropriate plugins
 import { Renderer } from '@pixi/core'; // Renderer is the class that is going to register plugins
 import { TickerPlugin } from '@pixi/ticker'; // TickerPlugin is the plugin for running an update loop (it's for the application class)
 import { assets } from './assets';
 import { bullets } from './bullets';
-import { createPlayerFrom } from './player';
 import { enemyMovement } from './enemyMovement';
 import { rectsIntersect } from './collisions';
 
@@ -47,13 +52,14 @@ preloadResources(assets, app).load(() => {
   // On loaded items
   const { resources } = app.loader;
   let speed = 8;
-  const player = createPlayerFrom(resources.player.texture);
+  const playerSheet = createPlayerSheet(resources.character.url);
+  const player = createPlayerFromSheet(playerSheet);
   moveToPos(player, { x: app.view.width / 2, y: app.view.height - 32 });
 
   const enemy = createPlayerFrom(resources.player.texture);
   moveToPos(enemy, { x: app.view.width / 2, y: 32 });
 
-  keyboard.init(app, player);
+  keyboard.init(app, player, playerSheet);
   enemyMovement.init(app, enemy);
   bullets.initOn(appContainer, app, player, enemy);
 

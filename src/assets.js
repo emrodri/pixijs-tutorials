@@ -6,4 +6,5 @@ export const assets = [
   { name: 'sprite03', resource: 'bloat03.png' },
   { name: 'sprite04', resource: 'bloat04.png' },
   { name: 'sprite05', resource: 'bloat05.png' },
+  { name: 'character', resource: 'character.png' },
 ];

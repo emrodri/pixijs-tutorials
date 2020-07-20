@@ -36,7 +36,9 @@
     "@pixi/core": "^5.3.0",
     "@pixi/interaction": "^5.3.0",
     "@pixi/loaders": "^5.3.0",
+    "@pixi/math": "^5.3.0",
     "@pixi/sprite": "^5.3.0",
+    "@pixi/sprite-animated": "^5.3.0",
     "@pixi/ticker": "^5.3.0"
   }
 }
