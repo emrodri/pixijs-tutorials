@@ -44,11 +44,10 @@ appContainer.appendChild(app.view);
 preloadResources(assets, app).load(() => {
   // On loaded items
   const { resources } = app.loader;
-  keyboard.init();
   const player = createPlayerFrom(resources.player.texture);
+
+  keyboard.init(app, player);
   bullets.initOn(appContainer, app, player);
   moveToCenter(player, app);
   app.stage.addChild(player);
-  app.ticker.add(() => keyboard.moveSprite(player));
-  app.ticker.add((delta) => bullets.updateBullets());
 });

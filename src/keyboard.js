@@ -1,8 +1,9 @@
 export const keyboard = {
   keysPressed: [],
-  init: function () {
+  init: function (app, sprite) {
     window.addEventListener('keydown', ({ key }) => keyboard.onKeyPress(key));
     window.addEventListener('keyup', ({ key }) => keyboard.onKeyRelease(key));
+    app.ticker.add(() => this.moveSprite(sprite));
   },
   onKeyPress: function (key) {
     this.keysPressed[key] = true;

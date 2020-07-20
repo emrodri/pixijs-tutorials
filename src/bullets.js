@@ -4,13 +4,14 @@ const BULLET_SPEED = 10;
 
 export const bullets = {
   bullets: [],
-  initOn: function (container, app, player) {
+  initOn: function (container, app, sprite) {
     container.addEventListener('pointerdown', () =>
-      bullets.fireBullet(app, player)
+      bullets.fireBullet(app, sprite)
     );
+    app.ticker.add((delta) => this.updateBullets());
   },
-  fireBullet: function (app, player) {
-    let bullet = createBullet(app, player);
+  fireBullet: function (app, sprite) {
+    let bullet = createBullet(app, sprite);
     bullets.bullets.push(bullet);
   },
   updateBullets: function () {
@@ -19,11 +20,11 @@ export const bullets = {
   },
 };
 
-const createBullet = (app, player) => {
+const createBullet = (app, sprite) => {
   let bullet = Sprite.from(app.loader.resources.bullet.texture);
   bullet.anchor.set(0.5);
-  bullet.x = player.x;
-  bullet.y = player.y;
+  bullet.x = sprite.x;
+  bullet.y = sprite.y;
   bullet.speed = BULLET_SPEED;
   app.stage.addChild(bullet);
   return bullet;
