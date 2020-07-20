@@ -19,6 +19,8 @@ import { TickerPlugin } from '@pixi/ticker'; // TickerPlugin is the plugin for r
 import { assets } from './assets';
 import { bullets } from './bullets';
 import { createPlayerFrom } from './player';
+import { enemyMovement } from './enemyMovement';
+import { rectsIntersect } from './collisions';
 
 Renderer.registerPlugin('batch', BatchRenderer);
 Renderer.registerPlugin('interaction', InteractionManager);
@@ -44,10 +46,17 @@ appContainer.appendChild(app.view);
 preloadResources(assets, app).load(() => {
   // On loaded items
   const { resources } = app.loader;
+  let speed = 8;
   const player = createPlayerFrom(resources.player.texture);
+  moveToPos(player, { x: app.view.width / 2, y: app.view.height - 32 });
+
+  const enemy = createPlayerFrom(resources.player.texture);
+  moveToPos(enemy, { x: app.view.width / 2, y: 32 });
 
   keyboard.init(app, player);
-  bullets.initOn(appContainer, app, player);
-  moveToCenter(player, app);
+  enemyMovement.init(app, enemy);
+  bullets.initOn(appContainer, app, player, enemy);
+
   app.stage.addChild(player);
+  app.stage.addChild(enemy);
 });

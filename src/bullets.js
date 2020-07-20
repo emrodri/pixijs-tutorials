@@ -1,23 +1,26 @@
 import { Sprite } from '@pixi/sprite';
+import { rectsIntersect } from './collisions';
 
 const BULLET_SPEED = 10;
 
 export const bullets = {
   bullets: [],
-  initOn: function (container, app, sprite) {
+  initOn: function (container, app, sprite, target) {
     container.addEventListener('pointerdown', () =>
       bullets.fireBullet(app, sprite)
     );
-    app.ticker.add((delta) => this.updateBullets());
+    app.ticker.add((delta) => updateBullets(this.bullets));
+    app.ticker.add((delta) => checkBullestHits(this.bullets, target));
   },
   fireBullet: function (app, sprite) {
     let bullet = createBullet(app, sprite);
     bullets.bullets.push(bullet);
   },
-  updateBullets: function () {
-    updateBulletsPosition(this.bullets);
-    this.bullets = removeOffScreenBulletsFrom(this.bullets);
-  },
+};
+
+const updateBullets = (bullets) => {
+  updateBulletsPosition(bullets);
+  bullets = removeOffScreenBulletsFrom(bullets);
 };
 
 const createBullet = (app, sprite) => {
@@ -39,4 +42,13 @@ const updateBulletsPosition = (bullets) => {
 
 const removeOffScreenBulletsFrom = (bullets) => {
   return [...bullets.filter((bullet) => bullet.inScreen)];
+};
+
+const checkBullestHits = (bullets, target) => {
+  bullets.map((bullet) => {
+    if (rectsIntersect(bullet, target)) {
+      console.log('impact');
+      bullet.y = -1;
+    }
+  });
 };
